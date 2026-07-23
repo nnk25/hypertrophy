@@ -1,8 +1,13 @@
 @import "tailwindcss";
 
+@theme {
+  --color-primary: #39FF14;
+  --color-muted: #6B7280;
+}
+
 @layer base {
   html {
-    @apply bg-[#0A0908] text-[#34F12A] p-4;
+    @apply bg-black text-white p-4;
   }
 
 }

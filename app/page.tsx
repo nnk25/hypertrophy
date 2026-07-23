@@ -4,10 +4,11 @@ export default async function Home() {
   const session = await auth()
   return (
     <>
-    {session?.user ? (
+    {/* {session?.user ? (
       <div className="flex flex-col items-center justify-center min-h-screen py-2">
         <h1 className="text-4xl font-bold mb-4">Welcome, {session.user.name}!</h1>
         <p className="text-lg mb-8">You are logged in with email: {session.user.email}</p>
+        <p className="text-lg mb-8">You are logged in with ID: {session.user.id}</p>
         <form action={async() => {
           "use server"
           await signOut()
@@ -15,7 +16,7 @@ export default async function Home() {
         }>
         <button
           type="submit"
-          className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+          className="px-4 py-2 bg-none text-white rounded hover:bg-red-600"
         >
           Sign Out
         </button>
@@ -37,7 +38,7 @@ export default async function Home() {
           </button>
         </form>
       </div>
-    )}
+    )} */}
     </>
   );
 }

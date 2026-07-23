@@ -1,5 +1,6 @@
-import { json, pgEnum, pgTable, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
+import { jsonb, pgEnum, pgTable, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
 import z from "zod";
+
 
 export const workoutSchema = z.object({
     title: z.string().min(1, "Title is required").describe("The title of the workout session"),
@@ -36,7 +37,7 @@ export const programs = pgTable("programs", {
     userId: uuid().notNull().references(() => users.id),
     title: varchar().notNull(),
     description: varchar().notNull(),
-    preferences: json().notNull(), // Store preferences as a JSON string
+    preferences: jsonb().notNull(), // Store preferences as a JSON string
     createdAt: timestamp().defaultNow()
 })
 
@@ -45,7 +46,7 @@ export const workouts = pgTable("workouts", {
     userId: uuid().notNull().references(() => users.id),
     programId: uuid().notNull().references(() => programs.id),
     title: varchar().notNull(),
-    exercises: json().notNull(), // Store exercises as a JSON string
+    exercises: jsonb().notNull(), // Store exercises as a JSON string
     createdAt: timestamp().defaultNow()
 })
 

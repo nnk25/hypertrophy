@@ -22,9 +22,9 @@ export async function POST(request: Request) {
             You are a fitness expert. Generate a workout session based on the following input:
             Goal: ${validation.data.goal}
             Experience Level: ${validation.data.experienceLevel}
-            Target Muscle Groups: ${validation.data.targetMuscleGroups}
-            ${validation.data.equipment ? `Equipment: ${validation.data.equipment}` : ""}
-            Session duration : ${validation.data.sessionDuration} minutes
+            Target Muscle Groups: ${validation.data.targetMuscleGroups.join(", ")}
+            ${validation.data.equipment ? `Gym Type: ${validation.data.equipment}` : ""}
+            Session duration : ${validation.data.sessionDuration}
     
             Requirements:
                 - Include warmup
@@ -41,10 +41,10 @@ export async function POST(request: Request) {
             if(!userId) {
                 return Response.json({error: "User not authenticated"}, {status: 401})
             }
-            await createWorkoutTemplate(userId, output.title, output.exercises)
+            const [{ workoutId }] = await createWorkoutTemplate(userId, output.title, output.exercises)
+            return Response.json({output, workoutId})
         }
-    
-        return Response.json({output})
+        return Response.json({error: "No output generated"}, {status: 500})
     } catch (error) {
         console.error("Error generating workout session:", error)
         return Response.json({error: "An error occurred while generating the workout session."}, {status: 500})

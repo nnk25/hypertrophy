@@ -5,10 +5,12 @@ import { ChevronLeft, ChevronRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { workoutQuestions } from "@/data/generate-workout-questions"
 import { Progress } from "@/components/ui/progress"
-import { Question } from "@/lib/types"
+import { preferencesSchema, Question, workoutSchema } from "@/lib/types"
+import { useRouter } from "next/navigation"
 
 export default function GenerateWorkoutPage() {
   const questions = workoutQuestions as Question[]
+  const [error, setError] = useState<string | null>(null)
   const [index, setIndex] = useState(0)
   const [answers, setAnswers] = useState<Record<string, string | string[] | null>>(() => {
     const initial: Record<string, string | string[] | null> = {}
@@ -19,8 +21,44 @@ export default function GenerateWorkoutPage() {
     return initial
   })
   const [finished, setFinished] = useState(false)
-
+  const [generating, setGenerating] = useState(false)
   const current = questions[index]
+  const router = useRouter()
+
+  async function generateWorkout() {
+    setError(null)
+    const parsedAnwers = preferencesSchema.safeParse(answers)
+    if (!parsedAnwers.success) {
+      console.error("Validation failed", parsedAnwers.error)
+      setError("Validation failed. Please check your answers.")
+      return
+    }
+    try {
+      setGenerating(true)
+      const response = await fetch("/api/generate/workout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(parsedAnwers.data),
+      })
+      const data = await response.json()
+      setGenerating(false)
+
+      if (!response.ok) {
+        console.error("Failed to generate workout")
+        setError("Failed to generate workout. Please try again.")
+        return
+      }
+
+      router.push(`/workouts/${data.workoutId}`)
+
+    } catch (err) {
+      console.error("Error generating workout", err)
+      setError("An error occurred while generating the workout. Please try again.")
+      setGenerating(false)
+    }
+  }
 
   function toggleOption(opt: string) {
     const key = (current as any).value ?? current.question
@@ -96,28 +134,28 @@ export default function GenerateWorkoutPage() {
                   <h2 className="text-lg font-semibold mb-2">{current.question}</h2>
 
                   <div className={`mt-4 grid ${current.style === "grid" ? "grid-cols-2" : ""} gap-3`}>
-                      {current.options.map((opt) => {
-                        const key = (current as any).value ?? current.question
-                        const selected =
-                          current.type === "single-choice"
-                            ? answers[key] === opt.label
-                            : Array.isArray(answers[key]) && (answers[key] as string[]).includes(opt.label)
+                    {current.options.map((opt) => {
+                      const key = (current as any).value ?? current.question
+                      const selected =
+                        current.type === "single-choice"
+                          ? answers[key] === opt.label
+                          : Array.isArray(answers[key]) && (answers[key] as string[]).includes(opt.label)
 
-                        return (
-                          <Button
-                            key={opt.value}
-                            variant={selected ? "default" : "outline"}
-                            onClick={() => toggleOption(opt.label)}
-                            className="justify-start h-[50px] py-4"
-                            size="lg"
-                          >
-                            <div className="flex flex-col text-sm gap-1 justify-start">
-                              <span className="truncate">{opt.label}</span>
-                              {opt.description && <span className="text-xs text-muted-foreground text-left">{opt.description}</span>}
-                            </div>
-                          </Button>
-                        )
-                      })}
+                      return (
+                        <Button
+                          key={opt.value}
+                          variant={selected ? "default" : "outline"}
+                          onClick={() => toggleOption(opt.label)}
+                          className="justify-start h-[50px] py-4"
+                          size="lg"
+                        >
+                          <div className="flex flex-col text-sm gap-1 justify-start">
+                            <span className="truncate">{opt.label}</span>
+                            {opt.description && <span className="text-xs text-muted-foreground text-left">{opt.description}</span>}
+                          </div>
+                        </Button>
+                      )
+                    })}
                   </div>
                 </section>
               ) : (
@@ -148,9 +186,10 @@ export default function GenerateWorkoutPage() {
           </div>
         </div>
 
-        <div className="flex justify-end w-full max-w-2xl mx-auto">
-          <Button onClick={goNext} disabled={!isAnswered()} className="mt-6 w-full h-[50px]" size="lg">
-            {index === questions.length - 1 ? "Generate Workout " : "Continue"}
+        <div className="flex flex-col justify-end w-full max-w-2xl mx-auto">
+          {error && <div className="text-sm text-center mt-4 text-destructive mr-4">{error}</div>}
+          <Button onClick={finished ? generateWorkout : goNext} disabled={!isAnswered()} className="mt-6 w-full h-[50px]" size="lg">
+            {generating ? "Generating..." : index === questions.length - 1 ? "Generate Workout " : "Continue"}
           </Button>
         </div>
 

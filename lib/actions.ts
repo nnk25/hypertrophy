@@ -12,11 +12,11 @@ export async function createUser(userData: { id: string; email: string; name: st
 
 export async function createWorkoutTemplate(userId: string, title: string, exercises: any) {
     try {
-        await db.insert(workoutTemplates).values({
+        return await db.insert(workoutTemplates).values({
             userId,
             title,
             exercises
-        })
+        }).returning({workoutId: workoutTemplates.id})
     } catch (error) {
         console.error("Error creating workout template:", error)
         throw error

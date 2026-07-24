@@ -27,9 +27,9 @@ export const workoutSchema = z.object({
     ).min(1, "At least one exercise is required").describe("A list of exercises in the workout session")})
 
 export const preferencesSchema = z.object({
-    goal: z.string().min(1, "Goal is required").describe("The fitness goal of the user"),
-    experienceLevel: z.enum(["beginner", "intermediate", "advanced"]).describe("The experience level of the user"),
-    targetMuscleGroups: z.string().min(1, "Muscle group is required").describe("The target muscle groups for the workout session"),
-    sessionDuration: z.number().min(1, "Session duration must be at least 1 minute").describe("The duration of the workout session in minutes"),
-    equipment: z.string().describe("The equipment available for the workout session")
+    goal: z.enum(["Hypertrophy", "Fat Loss", "Endurance"]).describe("The fitness goal of the user"),
+    experienceLevel: z.enum(["Beginner", "Intermediate", "Advanced"]).describe("The experience level of the user"),
+    targetMuscleGroups: z.array(z.enum(["Chest", "Back", "Legs", "Shoulders", "Biceps", "Triceps", "Core"])).nonempty().describe("The target muscle groups for the workout session"),
+    sessionDuration: z.enum(["30 minutes", "1 hour", "1.5 hours"]).describe("The duration of the workout session in minutes"),
+    equipment: z.enum(["None (Bodyweight only)", "Garage gym", "Local gym", "Fitness center"]).describe("The equipment available for the workout session")
 })

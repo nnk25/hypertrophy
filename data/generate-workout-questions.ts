@@ -80,13 +80,13 @@ export const workoutQuestions = [
         options: [
         {
                 label: "30 minutes",
-                value: "30_minutes",
+                value: "30",
             }, {
                 label: "1 hour",
-                value: "60_minutes",
+                value: "60",
             }, {
                 label: "1.5 hours",
-                value: "90_minutes",
+                value: "90",
             }
         ]
     },
@@ -102,10 +102,10 @@ export const workoutQuestions = [
                 label: "Garage gym",
                 value: "garage_gym",
             }, {
-                label: "Local Gym",
+                label: "Local gym",
                 value: "local_gym",
             }, {
-                label: "Fitness Center",
+                label: "Fitness center",
                 value: "fitness_center",
             }
         ]

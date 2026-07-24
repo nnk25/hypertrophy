@@ -4,7 +4,7 @@ export default async function Home() {
   const session = await auth()
   return (
     <>
-    {/* {session?.user ? (
+    {session?.user ? (
       <div className="flex flex-col items-center justify-center min-h-screen py-2">
         <h1 className="text-4xl font-bold mb-4">Welcome, {session.user.name}!</h1>
         <p className="text-lg mb-8">You are logged in with email: {session.user.email}</p>
@@ -38,7 +38,7 @@ export default async function Home() {
           </button>
         </form>
       </div>
-    )} */}
+    )}
     </>
   );
 }

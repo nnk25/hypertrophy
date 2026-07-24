@@ -1,4 +1,6 @@
-import { preferencesSchema, workoutSchema } from "@/db/schema"
+import { auth } from "@/auth"
+import { preferencesSchema, workoutSchema } from "@/lib/types"
+import { createWorkoutTemplate } from "@/lib/actions"
 import { groq } from "@ai-sdk/groq"
 import { generateText, Output } from "ai"
 import { treeifyError } from "zod"
@@ -32,9 +34,19 @@ export async function POST(request: Request) {
                 - Include rest time between sets
             `
         })
+
+        if(output) {
+            const userId = (await auth())?.user?.id
+
+            if(!userId) {
+                return Response.json({error: "User not authenticated"}, {status: 401})
+            }
+            await createWorkoutTemplate(userId, output.title, output.exercises)
+        }
     
         return Response.json({output})
     } catch (error) {
+        console.error("Error generating workout session:", error)
         return Response.json({error: "An error occurred while generating the workout session."}, {status: 500})
     }
 }

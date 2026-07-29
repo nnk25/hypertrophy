@@ -1,5 +1,5 @@
 import { defineRelations } from "drizzle-orm";
-import { integer, jsonb, pgEnum, pgTable, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
+import { decimal, integer, jsonb, pgEnum, pgTable, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
 
 export const goalEnum = pgEnum("goal", ["fat_loss", "hypertrophy", "enduarance"])
 export const experienceLevelEnum = pgEnum("experience_level", ["beginner", "intermediate", "advanced"])
@@ -36,6 +36,7 @@ export const sessions = pgTable("sessions", {
     workoutTemplateId: uuid().notNull().references(() => workoutTemplates.id),
     exerciseData: jsonb().notNull(), // Store exercise data as a JSON string
     duration: integer().notNull(),
+    totalVolume: decimal({mode:"number", precision: 10, scale: 2}).notNull(),
     createdAt: timestamp().defaultNow()
 })
 

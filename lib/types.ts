@@ -1,4 +1,6 @@
 import z from "zod"
+import { createInsertSchema } from "drizzle-orm/zod"
+import { sessions, users, workoutTemplates } from "@/db/schema"
 
 export type Option = {
   label: string
@@ -14,6 +16,20 @@ export type Question = {
   value?: string
   options: Option[]
 }
+
+export const userSchema = createInsertSchema(users)
+export const workoutTemplateSchema = createInsertSchema(workoutTemplates)
+export const sessionSchema = createInsertSchema(sessions).extend({
+    exerciseData: z.array(z.object({
+        name: z.string().min(1, "Exercise name is required").describe("The name of the exercise"),
+        data: z.array(z.object({
+            setNumber: z.number().min(1, "Set number must be at least 1").describe("The number of the set"),
+            weight: z.number().min(0, "Weight cannot be negative").describe("The weight used for the exercise in pounds"),
+            reps: z.number().min(1, "Reps must be at least 1").describe("The number of repetitions for the exercise"),
+            completed: z.boolean().default(false).describe("Whether the set is completed")
+        }))
+    }))
+})
 
 export const workoutSchema = z.object({
     title: z.string().min(1, "Title is required").describe("The title of the workout session"),

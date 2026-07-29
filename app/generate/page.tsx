@@ -35,7 +35,7 @@ export default function GenerateWorkoutPage() {
     }
     try {
       setGenerating(true)
-      const response = await fetch("/api/generate/workout", {
+      const response = await fetch("/api/workout/generate", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

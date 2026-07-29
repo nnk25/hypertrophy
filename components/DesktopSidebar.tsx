@@ -34,14 +34,16 @@ export function DesktopSidebar() {
 		<aside className="fixed inset-y-0 left-0 z-40 hidden w-72 border-r border-border bg-background md:flex">
 			<div className="flex h-full w-full flex-col px-5 py-6">
 				<div className="flex items-center justify-center rounded-2xl py-6">
-					<Image
-						src="/favicon.png"
-						alt="Hypertrophy"
-						width={64}
-						height={64}
-						className="size-16 object-contain"
-						priority
-					/>
+					<Link href="/workouts">
+						<Image
+							src="/favicon.png"
+							alt="Hypertrophy"
+							width={64}
+							height={64}
+							className="size-16 object-contain"
+							priority
+						/>
+					</Link>
 				</div>
 
 				<nav className="mt-8 flex flex-1 flex-col gap-2">
@@ -84,8 +86,9 @@ export function DesktopSidebar() {
 						render={
 							<Button
 								variant="ghost"
+								size="lg"
 								className={cn(
-									"mt-2 flex w-full items-center justify-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-colors",
+									"mt-2 cursor-pointer flex w-full items-center justify-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-colors",
 									"text-foreground hover:bg-muted"
 								)
 							}

@@ -10,7 +10,7 @@ export async function POST(request: Request) {
         const body = await request.json()
         const validation = preferencesSchema.safeParse(body)
         if(!validation.success) {
-            return Response.json({error: treeifyError(validation.error)}, {status: 400})
+        return Response.json({error: treeifyError(validation.error)}, {status: 400})
         }
     
         const {output} = await generateText({

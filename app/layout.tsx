@@ -4,6 +4,7 @@ import { Inter, Poppins, Geist } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { DesktopSidebar } from "@/components/DesktopSidebar";
 import { MobileNavbar } from "@/components/MobileNavbar";
+import { Toaster } from "@/components/ui/toast";
 
 const inter = Inter({subsets:['latin'],variable:'--font-sans'});
 
@@ -25,6 +26,7 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col pb-16 md:pb-0 md:pl-72">
         <DesktopSidebar />
         {children}
+        <Toaster/>
         <MobileNavbar />
       </body>
     </html>

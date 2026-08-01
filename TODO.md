@@ -4,6 +4,12 @@
 3. generate workout and display. must have a voice mode to request edits quickly. ai regenerates workout. give option to save the workout permanently.
 4. complete workout. log it to history
 
+# todo
+- add voice edit mode
+- edit generated workouts
+- weight and reps auto filling
+- some stat graphs
+
 # features
 - workouts
 - auth

@@ -1,7 +1,6 @@
 import NextAuth from "next-auth"
 import Google from "next-auth/providers/google"
 import { db } from "./lib/drizzle"
-import { users } from "./db/schema"
 import { createUser } from "./lib/actions"
 
 export const { handlers, signIn, signOut, auth } = NextAuth({

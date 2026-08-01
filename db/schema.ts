@@ -40,7 +40,7 @@ export const sessions = pgTable("sessions", {
     createdAt: timestamp().defaultNow()
 })
 
-export const relations = defineRelations({users, workoutTemplates, programs}, (r) => ({
+export const relations = defineRelations({users, workoutTemplates, programs, sessions}, (r) => ({
     users: {
         workoutTemplates: r.many.workoutTemplates({
             from: r.users.id,
@@ -55,6 +55,12 @@ export const relations = defineRelations({users, workoutTemplates, programs}, (r
         workoutTemplates: r.many.workoutTemplates({
             from: r.programs.id,
             to: r.workoutTemplates.programId
+        })
+    },
+    sessions: {
+        workoutTemplates: r.one.workoutTemplates({
+            from: r.sessions.workoutTemplateId,
+            to: r.workoutTemplates.id
         })
     }
 }))

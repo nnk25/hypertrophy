@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { signOut } from "next-auth/react";
+import { signIn, signOut, useSession } from "next-auth/react";
 import { Dumbbell, HistoryIcon, LogOut, User, Zap } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "./ui/button";
@@ -27,7 +27,7 @@ const navigation = [
 
 export function DesktopSidebar() {
 	const pathname = usePathname();
-
+	const { data: session } = useSession()
 	const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
 
 	return (
@@ -57,7 +57,7 @@ export function DesktopSidebar() {
 								isActive(href)
 									? "bg-primary/10 text-primary"
 									: "text-foreground hover:bg-muted"
-								)
+							)
 							}
 						>
 							<Icon className={cn("size-5", isActive(href) ? "text-primary" : "text-muted-foreground")} />
@@ -81,7 +81,7 @@ export function DesktopSidebar() {
 					</Link>
 				</nav>
 
-				<AlertDialog>
+				{session?.user ? (<AlertDialog>
 					<AlertDialogTrigger
 						render={
 							<Button
@@ -91,9 +91,9 @@ export function DesktopSidebar() {
 									"mt-2 cursor-pointer flex w-full items-center justify-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-colors",
 									"text-foreground hover:bg-muted"
 								)
-							}
-						/>
-					}
+								}
+							/>
+						}
 					>
 						<LogOut />
 						<span>Logout</span>
@@ -107,12 +107,12 @@ export function DesktopSidebar() {
 						</AlertDialogHeader>
 						<AlertDialogFooter>
 							<AlertDialogCancel>Cancel</AlertDialogCancel>
-							<AlertDialogAction onClick={() => signOut({redirectTo: "/"})} variant="destructive">
+							<AlertDialogAction onClick={() => signOut({ redirectTo: "/" })} variant="destructive">
 								Logout
 							</AlertDialogAction>
 						</AlertDialogFooter>
 					</AlertDialogContent>
-				</AlertDialog>
+				</AlertDialog>) : (<Button variant={"secondary"} onClick={() => signIn()}>Sign in</Button>)}
 			</div>
 
 		</aside>

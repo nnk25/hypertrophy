@@ -16,7 +16,8 @@ import {
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyTitle } from "@/components/ui/empty"
 import { toast } from "@/components/ui/toast"
 import { Spinner } from "@/components/ui/spinner"
-import { Trash2 } from "lucide-react"
+import { Trash2, Zap } from "lucide-react"
+import { SkeletonDiv } from "@/components/SkeletonDiv"
 
 type WorkoutTemplate = {
   id: string
@@ -31,9 +32,9 @@ export default function WorkoutPages() {
   const [deletingId, setDeletingId] = useState<string | null>(null)
 
   useEffect(() => {
+    setLoading(true)
     const fetchWorkouts = async () => {
       try {
-        setLoading(true)
         const response = await fetch("/api/workout")
         if (!response.ok) {
           throw new Error("Failed to fetch workout templates")
@@ -93,7 +94,7 @@ export default function WorkoutPages() {
         </EmptyHeader>
         <EmptyContent>
           <Link href="/generate">
-            <Button variant="outline">Generate workout</Button>
+            <Button variant="outline"><Zap/>Generate workout</Button>
           </Link>
         </EmptyContent>
       </Empty>
@@ -102,8 +103,8 @@ export default function WorkoutPages() {
 
   if(loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <Spinner />
+      <div className="flex items-center justify-center min-h-screen w-full">
+            <Spinner/>
       </div>
     )
   }
@@ -117,7 +118,7 @@ export default function WorkoutPages() {
           <p className="text-sm text-muted-foreground">Your generated workout templates</p>
         </div>
         <Link href="/generate">
-          <Button variant="outline">Generate workout</Button>
+          <Button variant="outline"><Zap/>Generate workout</Button>
         </Link>
       </div>
 

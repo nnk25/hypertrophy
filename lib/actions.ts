@@ -1,6 +1,6 @@
 import { sessions, users, workoutTemplates } from "@/db/schema";
 import { db } from "./drizzle";
-import { eq } from "drizzle-orm";
+import { count, desc, eq } from "drizzle-orm";
 import { sessionSchema, userSchema, workoutTemplateSchema } from "./types";
 
 export async function createUser(userData: { id: string; email: string; name: string; image: string }) {
@@ -61,10 +61,33 @@ export async function getWorkoutTemplateById(workoutId: string) {
 
 export async function getWorkoutTemplatesByUserId(userId: string) {
     try {
-        const userWorkoutTemplates = await db.select().from(workoutTemplates).where(eq(workoutTemplates.userId, userId))
+        const userWorkoutTemplates = await db.select().from(workoutTemplates).where(eq(workoutTemplates.userId, userId)).orderBy(desc(workoutTemplates.createdAt))
         return userWorkoutTemplates
     } catch (error) {
         console.error("Error fetching workout templates:", error)
+        throw error
+    }
+}
+
+export async function getWorkoutSessionsByUserId(userId: string, limit?: number, offset?: number) {
+    try {
+        const userWorkoutSessions = await db.query.sessions.findMany({
+            limit: limit ?? 5,
+            offset: offset,
+            where: {
+                userId: userId
+            },
+            orderBy: {createdAt: "desc"},
+            with: {
+                workoutTemplates: true
+            }
+        })
+        const totalCountResult = await db.select({ count: count() }).from(sessions).where(eq(sessions.userId, userId))
+        const totalCount = totalCountResult[0]?.count ?? 0
+
+        return {data: userWorkoutSessions, count: totalCount}
+    } catch (error) {
+        console.error("Error fetching workout sessions:", error)
         throw error
     }
 }

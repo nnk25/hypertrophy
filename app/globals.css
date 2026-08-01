@@ -5,7 +5,7 @@
 
 @layer base {
   html {
-    @apply bg-black text-white p-4 font-sans;
+    @apply bg-background text-foreground p-4 font-sans;
   }
   * {
     @apply border-border outline-ring/50;

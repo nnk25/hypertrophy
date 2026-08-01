@@ -58,3 +58,31 @@ export async function getWorkoutTemplateById(workoutId: string) {
         throw error
     }
 }
+
+export async function getWorkoutTemplatesByUserId(userId: string) {
+    try {
+        const userWorkoutTemplates = await db.select().from(workoutTemplates).where(eq(workoutTemplates.userId, userId))
+        return userWorkoutTemplates
+    } catch (error) {
+        console.error("Error fetching workout templates:", error)
+        throw error
+    }
+}
+
+export async function deleteWorkoutTemplateById(workoutId: string) {
+    try {
+        await db.delete(workoutTemplates).where(eq(workoutTemplates.id, workoutId))
+    } catch (error) {
+        console.error("Error deleting workout template:", error)
+        throw error
+    }
+}
+
+export async function deleteSessionsByWorkoutTemplateId(workoutTemplateId: string) {
+    try {
+        await db.delete(sessions).where(eq(sessions.workoutTemplateId, workoutTemplateId))
+    } catch (error) {
+        console.error("Error deleting sessions for workout template:", error)
+        throw error
+    }
+}

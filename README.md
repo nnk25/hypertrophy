@@ -1,3 +1,5 @@
+<p align="center"><img src="public/favicon.png" alt="Description" width="200"></p>
+
 # Hypertrophy - An AI powered personalized workout generator
 Hypertrophy is a Next.js powered web application that takes trainee preferences as a quiestionnaire and then generate a matching workout program.
 

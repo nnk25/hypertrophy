@@ -242,7 +242,7 @@ export default function WorkoutPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 p-4">
       {/* Header */}
       <div className="flex items-center justify-between border-b pb-6">
         <div>

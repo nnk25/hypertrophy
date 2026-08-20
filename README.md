@@ -9,6 +9,13 @@ Hypertrophy is a Next.js powered web application that takes trainee preferences 
 - Complete a workout session
 - View past workout sessions
 
+## Tech stack
+- Next.js
+- Vercel AI SDK
+- Groq
+- Neon + drizzle ORM
+- Tailwinds, lucide-react, shadcn for frontend
+
 ## Todo
 - [ ] Requesting generated workout editing via voice
 - [ ] In session exercise editing and adding

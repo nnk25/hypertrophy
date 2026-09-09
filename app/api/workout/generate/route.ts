@@ -8,12 +8,17 @@ import { treeifyError } from "zod"
 export async function POST(request: Request) {
     try {
         const body = await request.json()
-        const validation = preferencesSchema.safeParse(body)
-        if(!validation.success) {
-        return Response.json({error: treeifyError(validation.error)}, {status: 400})
+        const userId = (await auth())?.user?.id
+
+        if (!userId) {
+            return Response.json({ error: "User not authenticated" }, { status: 401 })
         }
-    
-        const {output} = await generateText({
+        const validation = preferencesSchema.safeParse(body)
+        if (!validation.success) {
+            return Response.json({ error: treeifyError(validation.error) }, { status: 400 })
+        }
+
+        const { output } = await generateText({
             model: groq("openai/gpt-oss-120b"),
             output: Output.object({
                 schema: workoutSchema
@@ -35,18 +40,14 @@ export async function POST(request: Request) {
             `
         })
 
-        if(output) {
-            const userId = (await auth())?.user?.id
+        if (output) {
 
-            if(!userId) {
-                return Response.json({error: "User not authenticated"}, {status: 401})
-            }
             const [{ workoutId }] = await createWorkoutTemplate(userId, output.title, output.exercises)
-            return Response.json({output, workoutId})
+            return Response.json({ output, workoutId })
         }
-        return Response.json({error: "No output generated"}, {status: 500})
+        return Response.json({ error: "No output generated" }, { status: 500 })
     } catch (error) {
         console.error("Error generating workout session:", error)
-        return Response.json({error: "An error occurred while generating the workout session."}, {status: 500})
+        return Response.json({ error: "An error occurred while generating the workout session." }, { status: 500 })
     }
 }

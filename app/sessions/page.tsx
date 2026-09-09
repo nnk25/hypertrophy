@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useMemo, useState } from "react"
+import { Suspense, useEffect, useMemo, useState } from "react"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { ChevronLeft, ChevronRight, Dumbbell, Layers3, Timer, TrendingUp } from "lucide-react"
 
@@ -184,7 +184,7 @@ function SessionCard({ session }: { session: WorkoutSession }) {
     )
 }
 
-export default function SessionsPage() {
+function SessionsContent() {
     const router = useRouter()
     const pathname = usePathname()
     const searchParams = useSearchParams()
@@ -371,5 +371,19 @@ export default function SessionsPage() {
                 </div>
             </div>
         </div>
+    )
+}
+
+export default function SessionsPage() {
+    return (
+        <Suspense
+            fallback={
+                <div className="flex min-h-screen w-full items-center justify-center">
+                    <Spinner />
+                </div>
+            }
+        >
+            <SessionsContent />
+        </Suspense>
     )
 }
